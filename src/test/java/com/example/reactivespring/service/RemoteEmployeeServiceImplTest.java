@@ -2,9 +2,6 @@ package com.example.reactivespring.service;
 
 import static com.example.reactivespring.model.Gender.FEMALE;
 import static com.example.reactivespring.model.Gender.MALE;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
 
 import com.example.reactivespring.model.Employee;
 import org.junit.Before;
@@ -12,7 +9,7 @@ import org.junit.Test;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 public class RemoteEmployeeServiceImplTest {
 
@@ -59,31 +56,38 @@ public class RemoteEmployeeServiceImplTest {
 
   @Test
   public void testFindById() {
-    Mono<Employee> employeeMono = service.findById(1);
-    employeeMono.subscribe(e -> assertThat(e.getFirstName(), is("Andrew")));
+    var employeeMono = service.findById(1);
+    StepVerifier.create(employeeMono)
+        .assertNext(e -> e.getFirstName().equals("Andrew"))
+        .expectComplete()
+        .verify();
   }
 
   @Test
   public void testFindByIdNotFound() {
-    Mono<Employee> employeeMono = service.findById(-999);
-    employeeMono.subscribe(e -> assertThat(e, is(nullValue())));
+    var employeeMono = service.findById(-999);
+    StepVerifier.create(employeeMono)
+        .expectComplete()
+        .verify();
   }
 
   @Test
   public void testFindAll() {
-    var employeeSubscriber = new EmployeeSubscriber();
+    var employeeFlux = service.findAll();
 
-    service.findAll().subscribe(employeeSubscriber);
-
-    assertThat(employeeSubscriber.getCount(), is(3));
+    StepVerifier.create(employeeFlux.map(Employee::getFirstName))
+        .expectNext("Andrew", "Lisa", "Perry")
+        .expectComplete()
+        .verify();
   }
 
   @Test
   public void testFindByGender() {
-    var employeeSubscriber = new EmployeeSubscriber();
+    var employeeFlux = service.findByGender(MALE);
 
-    service.findByGender(MALE).subscribe(employeeSubscriber);
-
-    assertThat(employeeSubscriber.getCount(), is(2));
+    StepVerifier.create(employeeFlux.map(Employee::getFirstName))
+        .expectNext("Andrew", "Perry")
+        .expectComplete()
+        .verify();
   }
 }
