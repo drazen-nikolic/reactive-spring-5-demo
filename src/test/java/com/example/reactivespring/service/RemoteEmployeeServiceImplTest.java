@@ -6,8 +6,6 @@ import static com.example.reactivespring.model.Gender.MALE;
 import com.example.reactivespring.model.Employee;
 import org.junit.Before;
 import org.junit.Test;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
@@ -23,35 +21,6 @@ public class RemoteEmployeeServiceImplTest {
         new Employee(3, "Perry", "Jones", 45, MALE)
     )
     );
-  }
-
-  private class EmployeeSubscriber implements Subscriber<Employee> {
-
-    private int count = 0;
-    private Subscription subscription;
-
-    public int getCount() {
-      return count;
-    }
-
-    @Override
-    public void onSubscribe(Subscription subscription) {
-      this.subscription = subscription;
-      subscription.request(1);
-    }
-
-    @Override
-    public void onNext(Employee item) {
-      count++;
-      subscription.request(1);
-    }
-
-    @Override
-    public void onError(Throwable throwable) {}
-
-    @Override
-    public void onComplete() {
-    }
   }
 
   @Test

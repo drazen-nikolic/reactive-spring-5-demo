@@ -10,7 +10,7 @@
   <packaging>jar</packaging>
 
   <name>reactivespring</name>
-  <description>Demo project for Spring Boot</description>
+  <description>Demo project for Reactive Spring 5 WebFlux</description>
 
   <parent>
     <groupId>org.springframework.boot</groupId>
