@@ -21,7 +21,7 @@ public class ReactivespringApplication {
 
 	@Bean
 	public EmployeeService employeeRepository() {
-    var employees = Flux.just(
+    Flux<Employee> employees = Flux.just(
         new Employee(1, "Andrew", "Roberts", 31, MALE),
         new Employee(2, "Lisa", "Brooks", 25, FEMALE),
         new Employee(3, "Perry", "Jones", 45, MALE),

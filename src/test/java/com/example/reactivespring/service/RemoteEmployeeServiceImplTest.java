@@ -7,6 +7,7 @@ import com.example.reactivespring.model.Employee;
 import org.junit.Before;
 import org.junit.Test;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 public class RemoteEmployeeServiceImplTest {
@@ -25,7 +26,7 @@ public class RemoteEmployeeServiceImplTest {
 
   @Test
   public void testFindById() {
-    var employeeMono = service.findById(1);
+    Mono<Employee> employeeMono = service.findById(1);
     StepVerifier.create(employeeMono)
         .assertNext(e -> e.getFirstName().equals("Andrew"))
         .expectComplete()
@@ -34,7 +35,7 @@ public class RemoteEmployeeServiceImplTest {
 
   @Test
   public void testFindByIdNotFound() {
-    var employeeMono = service.findById(-999);
+    Mono<Employee> employeeMono = service.findById(-999);
     StepVerifier.create(employeeMono)
         .expectComplete()
         .verify();
@@ -42,7 +43,7 @@ public class RemoteEmployeeServiceImplTest {
 
   @Test
   public void testFindAll() {
-    var employeeFlux = service.findAll();
+    Flux<Employee> employeeFlux = service.findAll();
 
     StepVerifier.create(employeeFlux.map(Employee::getFirstName))
         .expectNext("Andrew", "Lisa", "Perry")
@@ -52,7 +53,7 @@ public class RemoteEmployeeServiceImplTest {
 
   @Test
   public void testFindByGender() {
-    var employeeFlux = service.findByGender(MALE);
+    Flux<Employee> employeeFlux = service.findByGender(MALE);
 
     StepVerifier.create(employeeFlux.map(Employee::getFirstName))
         .expectNext("Andrew", "Perry")
