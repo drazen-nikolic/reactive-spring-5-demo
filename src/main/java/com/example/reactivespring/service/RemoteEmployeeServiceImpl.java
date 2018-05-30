@@ -2,16 +2,14 @@ package com.example.reactivespring.service;
 
 import com.example.reactivespring.model.Employee;
 import com.example.reactivespring.model.Gender;
+import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+@RequiredArgsConstructor
 public class RemoteEmployeeServiceImpl implements EmployeeService {
 
   private final Flux<Employee> employees;
-
-  public RemoteEmployeeServiceImpl(Flux<Employee> employees) {
-    this.employees = employees;
-  }
 
   @Override
   public Mono<Employee> findById(Integer id) {

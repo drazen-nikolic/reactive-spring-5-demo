@@ -3,6 +3,7 @@ package com.example.reactivespring.web;
 import com.example.reactivespring.model.Employee;
 import com.example.reactivespring.model.Gender;
 import com.example.reactivespring.service.EmployeeService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,12 +12,9 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
+@RequiredArgsConstructor
 public class EmployeeController {
   private final EmployeeService repository;
-
-  public EmployeeController(EmployeeService repository) {
-    this.repository = repository;
-  }
 
   @GetMapping("employees/{id}")
   public Mono<Employee> findById(@PathVariable Integer id) {
